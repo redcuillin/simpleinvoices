@@ -21,5 +21,5 @@ const LOGGING = false;
 // any config.php setting in this extra file(which wont be kept in svn) will overwrite config.php values
 // - this way everyone can have their own conf setting without messing with anyone else's setting
 //RELEASE TODO: make sure CONFIG_SECTION is set back to production
-const CONFIG_SECTION = "roland"; //test,staging,dev,live etc..
+const CONFIG_SECTION = "production"; //test,staging,dev,live etc..
 const CONFIG_DB_PREFIX = 'database';
