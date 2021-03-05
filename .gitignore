@@ -1,6 +1,7 @@
 *.bak
 *.swp
 custom.config.*
+*.config.php
 %%*
 *.tpl.php
 zend_cache---*
