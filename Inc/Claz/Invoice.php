@@ -897,7 +897,7 @@ class Invoice
                 $requests->add($request);
             }
 
-            if (!empty($line_Item_tax_ids) && is_array($line_item_tax_ids)) {
+            if (is_array($line_item_tax_ids)) {
                 foreach ($line_item_tax_ids as $value) {
                     if (!empty($value)) {
                         // @formatter:off
@@ -1341,8 +1341,7 @@ class Invoice
                           'description'=> $invoice_item['description'],
                           'total'      => $invoice_item['total'],
                           'attribute'  => $invoice_item['attribute']);
-            $taxId = empty($invoice_item['tax_id'] ? null : $invoice_item['tax_id']);
-            self::insertItem($list, $taxId);
+            self::insertItem($list, $invoice_item['tax_id']);
         }
         // @formatter:on
 

@@ -396,18 +396,15 @@ class Email {
     }
 
     /**
-     * @param string $to Email address to send message to. Multiple email
-     *          addresses allowed if separated by a comma.
+     * @param array/string $to Email address to send message to.
      * @return bool true if OK, false if not.
      */
     public function setTo($to): bool
     {
-        if (empty($to) || !is_string($to)) {
+        if (empty($to)) {
             error_log("Email::setTo() - Empty TO address");
             return false;
         } else {
-            // Basically explodes a semi-colon separated string into
-            // an array and then filters out any empty elements.
             $email_to = array_filter(explode(';', $to));
             if (is_array($email_to) && count($email_to) > 1) {
                 foreach ($email_to as $addr) {

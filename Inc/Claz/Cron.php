@@ -164,11 +164,10 @@ class Cron {
     }
 
     /**
-     * Build a semi-colon separated list of email addresses per request.
      * @param $src_array
      * @param $customer_email
      * @param $biller_email
-     * @return string Semi-colon separated list of email addresses.
+     * @return array
      */
     private static function getEmailSendAddresses($src_array, $customer_email, $biller_email) {
         $email_to_addresses = array ();
@@ -178,21 +177,18 @@ class Cron {
         if ($src_array['email_biller'] == ENABLED) {
             self::breakMultiEmail($email_to_addresses, $biller_email);
         }
-
-        return implode(';', $email_to_addresses);
+        return $email_to_addresses;
     }
 
     /**
-     * @param array &$emailAddresses Array to update
+     * @param array $emailAddresses Array to update
      * @param string $emailAddrLine Email address line with one or more email addresses separated
      *          by a semi-colon.
      */
     private static function breakMultiEmail(&$emailAddresses, $emailAddrLine) {
         $parts = explode(';', $emailAddrLine);
         foreach ($parts as $part) {
-            if (!empty($part)) {
-                $emailAddresses[] = $part;
-            }
+            $emailAddresses[] = $part;
         }
     }
 
