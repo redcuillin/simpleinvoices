@@ -170,7 +170,7 @@
           </tr>
         {/if}
         {if isset($invoiceItem.description)}
-          <tr>
+          <tr class="si_product_description">
             <th>&nbsp;</th>
             <td colspan="5">{$LANG.descriptionUc}:&nbsp;{$invoiceItem.description|htmlSafe}</td>
           </tr>

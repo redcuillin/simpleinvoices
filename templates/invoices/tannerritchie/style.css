@@ -112,6 +112,8 @@ table.right, table .right {float: right;}
 
 .si_product_attribute { padding-right:20px; }
 
+.si_product_description {font-size: .8em; color: #535353;}
+
 .text_left { text-align: left; }
 
 .text_center { text-align: center; }
