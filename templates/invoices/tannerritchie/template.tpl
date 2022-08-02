@@ -56,7 +56,7 @@
     </tr>
   </table>
   <!-- Summary - end -->
-  <table class="right">
+  <table>
     <!-- Biller section - start -->
     {print_if_not_empty label=$LANG.billerUc field=$biller.name class1='tbl1-bottom col1 text_left' class2='tbl1-bottom col1' colspan="3"}
     {print_if_not_empty label=$LANG.addressUc field=$biller.street_address class1='text_left' class2='' colspan="3"}
