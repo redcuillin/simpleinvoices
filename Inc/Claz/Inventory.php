@@ -84,7 +84,7 @@ class Inventory
 
     /**
      * Retrieve inventory record(s).
-     * @param int|null $inv_id ID of the inventory to retrieve or 0 if all records to be retrieved..
+     * @param int|null $inv_id ID of the inventory to retrieve or 0 if all records to be retrieved.
      * @return array Row(s) retrieved.
      */
     private static function getInventories(?int $inv_id = null): array
@@ -175,7 +175,7 @@ class Inventory
      */
     public static function delete()
     {
-        throw new Exception("inventory.php delete(): delete not supported.");
+        throw new Exception("inventory::delete(): delete not supported.");
     }
 
     /**

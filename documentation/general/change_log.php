@@ -17,6 +17,27 @@
     <br/>
     <div id="left">
         <ul>
+            <li>2022-09-30 - <strong>2020.4.2</strong>
+                <ul>
+                    <li>Make invoice_item_id a key field in the si_invoice_item_tax table.</li>
+                    <li>Add logic to support new invoice items for next new, cron generated,
+                        itemized invoice.</li>
+                </ul>
+            </li>
+            <li>2022-08-29 - <strong>2020.4.1</strong>
+                <ul>
+                    <li>Updated node library files.</li>
+                    <li>Fixed logic for user screen change of user role to properly set list.</li>
+                    <li>Miscellaneous clean up of function parameter declarations and comment syntax.
+                        No functional change.</li>
+                </ul>
+            </li>
+            <li>2022-08-10 - <strong>2020.4.0</strong>
+                <ul>
+                    <li>Updated to the latest version of Smarty template engine.</li>
+                    <li>Correct logic that set invoice unity price when product changes.</li>
+                </ul>
+            </li>
             <li>2022-07-22 - <strong>2020.3.22</strong>
                 <ul>
                     <li>Update trix library to resolve security issues.</li>
@@ -443,7 +464,7 @@
             <li>2020-06-16 - <strong>2019.2.26</strong>
                 <ul>
                     <li>Modified code to handle multiple TO and BCC email addresses using a
-                        semi-colon, ";", to separate each address.
+                        semicolon, ";", to separate each address.
                     </li>
                     <li>Added logic to report invalid email addresses in the FROM, TO and BCC
                         fields as errors to the user rather than throwing an error that never

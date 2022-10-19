@@ -377,7 +377,7 @@ class Invoice
 
     /**
      * Update values in invoice with just calculated values from calculateAgeDays().
-     * Note: Previously used array_merge but it doesn't update numeric values which
+     * Note: Previously used array_merge, but it doesn't update numeric values which
      *       $ageInfo array contains.
      * @param array $invoice Reference to the array with invoice values.
      * @param array $ageInfo Updated aging information.
@@ -454,7 +454,7 @@ class Invoice
     {
 
         // Don't recalculate $owing unless you have to because it involves DB reads.
-        // Note that there is a time value in the dates so they are typically equal only when
+        // Note that there is a time value in the dates, so they are typically equal only when
         // an account is created.
         if ($setAging && ($lastActivityDate >= $agingDate || $owing > 0)) {
             $total = self::getInvoiceTotal($id);
@@ -462,7 +462,7 @@ class Invoice
             $owing = $total - $paid;
         }
 
-        // We don't want create values here.
+        // We don't want to create values here.
         if ($owing < 0 || !$setAging) {
             $owing = 0;
         }
@@ -567,7 +567,7 @@ class Invoice
 
     /**
      * Insert a new invoice record
-     * @param array Associative array of items to insert into invoice record.
+     * @param array $list Associative array of items to insert into invoice record.
      * @return int Unique ID of the new invoice record. 0 if insert failed.
      * @throws PdoDbException
      */
@@ -614,7 +614,7 @@ class Invoice
 
     /**
      * Insert a new invoice_item and the invoice_item_tax records.
-     * @param array Associative array keyed by field name with its assigned value.
+     * @param array $list Associative array keyed by field name with its assigned value.
      * @param array|null $taxIds
      * @return int Unique ID of the new invoice_item record.
      * @throws PdoDbException
@@ -627,7 +627,6 @@ class Invoice
             $pdoDb->setFauxPost($list);
             $pdoDb->setExcludedFields("id");
             $id = $pdoDb->request("INSERT", "invoice_items");
-
             self::chgInvoiceItemTax($id, $taxIds, $list['unit_price'], $list['quantity'], false);
         } catch (PdoDbException $pde) {
             error_log("Invoice::insertItem() - Error: " . $pde->getMessage());
@@ -812,6 +811,7 @@ class Invoice
      * @param int $id
      * @return bool true if delete processed, false if not.
      * @throws PdoDbException
+     * @todo Add logic to check for invoice use by cron items.
      */
     public static function delete(string $module, string $idField, int $id): bool
     {
@@ -921,7 +921,7 @@ class Invoice
     }
 
     /**
-     * Insert/update the multiple taxes for a invoice line item.
+     * Insert/update the multiple taxes for an invoice line item.
      * @param int $invoiceItemId
      * @param array|null $lineItemTaxIds
      * @param float $unitPrice
@@ -1160,6 +1160,7 @@ class Invoice
                 foreach ($tax as $key => $value) {
                     $invoiceItem['tax'][$key] = $value['tax_id'];
                 }
+
                 $invoiceItems[] = $invoiceItem;
             }
         } catch (PdoDbException $pde) {
@@ -1299,7 +1300,7 @@ class Invoice
      * Function: taxesGroupedForInvoiceItem
      * Purpose: to show a nice summary of total $ for tax for an invoice item.
      * Used for invoice editing
-     * @param int Invoice item ID
+     * @param int $invoiceItemId Invoice item ID
      * @return array Items found
      * @throws PdoDbException
      */
@@ -1359,10 +1360,11 @@ class Invoice
     /**
      * Process a recurring item
      * @param int $invoiceId
+     * @param int $cronId
      * @return int
      * @throws PdoDbException
      */
-    public static function recur(int $invoiceId): int
+    public static function recur(int $invoiceId, int $cronId): int
     {
         global $config;
 
@@ -1376,7 +1378,9 @@ class Invoice
         }
 
         $invoice = self::getOne($invoiceId);
-        $invoiceItems = self::getInvoiceItems($invoiceId);
+        $domainId = $invoice['domain_id'];
+        $invoiceItems = array_merge(self::getInvoiceItems($invoiceId), Cron::getCronInvoiceItems($cronId, $domainId));
+
         // @formatter:off
         $list = [
             'biller_id'     => $invoice['biller_id'],
@@ -1408,9 +1412,10 @@ class Invoice
                 'attribute'  => $invoiceItem['attribute']
             ];
 
-            self::insertItem($list, $invoiceItem['tax_id']);
+            self::insertItem($list, $invoiceItem['tax']);
         }
         // @formatter:on
+        Cron::deleteCronInvoiceItems($cronId);
 
         return $newId;
     }
