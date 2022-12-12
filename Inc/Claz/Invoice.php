@@ -53,7 +53,7 @@ class Invoice
      * @return array invoice records.
      * @throws PdoDbException
      */
-    public static function getAll(string $sort="index_name", string $dir="desc"): array
+    public static function getAll(string $sort = "index_name", string $dir = "desc"): array
     {
         return self::getInvoices(null, $sort, $dir);
     }
@@ -95,7 +95,7 @@ class Invoice
                     $pdoDb->setHavings(Invoice::buildHavings($having));
                 } else {
                     // Will be caught below
-                    throw new PdoDbException("Invalid having parameter passed - ". print_r($having, true));
+                    throw new PdoDbException("Invalid having parameter passed - " . print_r($having, true));
                 }
             } catch (PdoDbException $pde) {
                 error_log("Invoice::getAllWithHavings() - Error: " . $pde->getMessage());
@@ -161,48 +161,48 @@ class Invoice
                 $invPymt = '';
             } else {
                 $invEdit = "<a class='index_table' title='{$LANG['edit']} {$row['index_id']}' " .
-                              "href='index.php?module=invoices&amp;view=edit&amp;id={$row['id']}'>" .
-                               "<img src='images/edit.png' class='action' alt='edit'>" .
-                           "</a>";
+                    "href='index.php?module=invoices&amp;view=edit&amp;id={$row['id']}'>" .
+                    "<img src='images/edit.png' class='action' alt='edit'>" .
+                    "</a>";
 
                 $invPymt = "<!-- Alternatively: The Owing column can have the link on the amount instead of the payment icon code here -->";
                 if ($row['status'] == ENABLED && $row['owing'] > 0) {
                     $invPymt .= "<!-- Real Invoice Has Owing - Process payment -->" .
-                                 "<a title='{$LANG['processPayment']} {$row['index_id']}' class='index_table' " .
-                                    "href='index.php?module=payments&amp;view=process&amp;id={$row['id']}&amp;op=pay_selected_invoice'>" .
-                                     "<img src='images/money_dollar.png' class='action' alt='payment'/>" .
-                                 "</a>";
+                        "<a title='{$LANG['processPayment']} {$row['index_id']}' class='index_table' " .
+                        "href='index.php?module=payments&amp;view=process&amp;id={$row['id']}&amp;op=pay_selected_invoice'>" .
+                        "<img src='images/money_dollar.png' class='action' alt='payment'/>" .
+                        "</a>";
                 } elseif ($row['status'] == ENABLED) {
                     $invPymt .= "<!-- Real Invoice Payment Details if not Owing (get different color payment icon) -->" .
-                                 "<a title='{$LANG['processPayment']} {$row['index_id']}' class='index_table' " .
-                                    "href='index.php?module=payments&amp;view=view&amp;ac_inv_id={$row['id']}'>" .
-                                     "<img src='images/money_dollar.png' class='action' alt='payment' />" .
-                                 "</a>";
+                        "<a title='{$LANG['processPayment']} {$row['index_id']}' class='index_table' " .
+                        "href='index.php?module=payments&amp;view=view&amp;ac_inv_id={$row['id']}'>" .
+                        "<img src='images/money_dollar.png' class='action' alt='payment' />" .
+                        "</a>";
                 } else {
                     $invPymt .= "<!-- Draft Invoice Just Image to occupy space till blank or greyed out icon becomes available -->" .
-                                "<img src='images/money_dollar.png' class='action' alt='payment' />";
+                        "<img src='images/money_dollar.png' class='action' alt='payment' />";
                 }
             }
 
             $action = "<a class='index_table' title='{$LANG['quickViewTooltip']} {$row['index_id']}' " .
-                         "href='index.php?module=invoices&amp;view=quickView&amp;id={$row['id']}'>" .
-                          "<img src='images/view.png' class='action' alt='view' />" .
-                      "</a>" .
-                      $invEdit .
-                      "<a class='index_table' title='{$LANG['printPreviewTooltip']} {$row['index_id']}' target='_blank' " .
-                         "href='index.php?module=export&amp;view=invoice&amp;id={$row['id']}&amp;format=print'>" .
-                          "<img src='images/printer.png' class='action' alt='print' />" .
-                      "</a>" .
-                      "<a class='invoice_export_dialog' id='btnShowSimple' title='{$LANG['exportUc']} {$row['index_id']}' " .
-                         "href='#' data-row-num='{$row['id']}' data-spreadsheet='{$config['exportSpreadsheet']}' " .
-                         "data-wordprocessor='{$config['exportWordProcessor']}'>" .
-                          "<img src='images/page_white_acrobat.png' class='action' alt='spreadsheet'/>" .
-                      "</a>" .
-                      $invPymt .
-                      "<a title='{$LANG['email']} {$row['index_id']}' class='index_table' " .
-                         "href='index.php?module=invoices&amp;view=email&amp;stage=1&amp;id={$row['id']}'>" .
-                          "<img src='images/mail-message-new.png' class='action' alt='email' />" .
-                      "</a>";
+                "href='index.php?module=invoices&amp;view=quickView&amp;id={$row['id']}'>" .
+                "<img src='images/view.png' class='action' alt='view' />" .
+                "</a>" .
+                $invEdit .
+                "<a class='index_table' title='{$LANG['printPreviewTooltip']} {$row['index_id']}' target='_blank' " .
+                "href='index.php?module=export&amp;view=invoice&amp;id={$row['id']}&amp;format=print'>" .
+                "<img src='images/printer.png' class='action' alt='print' />" .
+                "</a>" .
+                "<a class='invoice_export_dialog' id='btnShowSimple' title='{$LANG['exportUc']} {$row['index_id']}' " .
+                "href='#' data-row-num='{$row['id']}' data-spreadsheet='{$config['exportSpreadsheet']}' " .
+                "data-wordprocessor='{$config['exportWordProcessor']}'>" .
+                "<img src='images/page_white_acrobat.png' class='action' alt='spreadsheet'/>" .
+                "</a>" .
+                $invPymt .
+                "<a title='{$LANG['email']} {$row['index_id']}' class='index_table' " .
+                "href='index.php?module=invoices&amp;view=email&amp;stage=1&amp;id={$row['id']}'>" .
+                "<img src='images/mail-message-new.png' class='action' alt='email' />" .
+                "</a>";
 
             $pattern = '/^(.*)_(.*)$/';
             $tableRows[] = [
@@ -216,7 +216,7 @@ class Invoice
                 'owing' => isset($row['status']) ? $row['owing'] : '',
                 'aging' => $row['aging'] ?? '',
                 'currency_code' => $row['currency_code'],
-                'locale' => preg_replace($pattern,'$1-$2', $row['locale'])
+                'locale' => preg_replace($pattern, '$1-$2', $row['locale'])
             ];
         }
         return $tableRows;
@@ -344,18 +344,19 @@ class Invoice
                 $owing = $row['total'] - $row['paid'];
                 // Check to case where owing on invoice differs from calculated owing.
                 // Also ignore contrived owing value of 1.
-                if (Util::numberTrim($row['owing']) != 1 && $owing > 0 &&
-                    Util::numberTrim($row['owing']) != Util::numberTrim($owing) && $row['preference_id'] == 1) {
-                    error_log("Invoice::getInvoices() - Owing discrepancy on invoice id[{$row['id']}] - index_id[{$row['index_id']}]. " .
-                        "Calculated owing[$owing] not equal to invoices table owning[{$row['owing']}]");
-                }
+                // if (Util::numberTrim($row['owing']) != 1 && $owing > 0 &&
+                //     Util::numberTrim($row['owing']) != Util::numberTrim($owing) && $row['preference_id'] == 1) {
+                //     error_log("Invoice::getInvoices() - Owing discrepancy on invoice id[{$row['id']}] - index_id[{$row['index_id']}]. " .
+                //         "Calculated owing[$owing] not equal to invoices table owning[{$row['owing']}]");
+                // }
                 $ageInfo = self::calculateAgeDays(
                     $row['id'],
                     $row['date'],
                     $row['owing'],
                     $row['last_activity_date'],
                     $row['aging_date'],
-                    $row['set_aging']);
+                    $row['set_aging']
+                );
 
                 // The merge will update fields that exist and append those that don't.
                 self::updateAgingValues($row, $ageInfo);
@@ -449,9 +450,14 @@ class Invoice
      *              "aging" (aging is the wording such as 1-14).
      * @throws PdoDbException
      */
-    private static function calculateAgeDays(int $id, string $invoiceDate, float $owing, string $lastActivityDate,
-                                             string $agingDate, bool $setAging): array
-    {
+    private static function calculateAgeDays(
+        int $id,
+        string $invoiceDate,
+        float $owing,
+        string $lastActivityDate,
+        string $agingDate,
+        bool $setAging
+    ): array {
 
         // Don't recalculate $owing unless you have to because it involves DB reads.
         // Note that there is a time value in the dates, so they are typically equal only when
@@ -536,7 +542,8 @@ class Invoice
                     $owing,
                     $lastActivityDate,
                     $agingDate,
-                    $setAging);
+                    $setAging
+                );
 
                 try {
                     $pdoDb->setFauxPost([
@@ -647,9 +654,15 @@ class Invoice
      * @return int <b>id</b> of new <i>invoice_items</i> record. 0 if insert failed.
      * @throws PdoDbException
      */
-    public static function insertInvoiceItem(int $invoiceId, float $quantity, int $productId, array $taxIds,
-                                             string $description = "", float $unitPrice = 0, ?array $attribute = null): int
-    {
+    public static function insertInvoiceItem(
+        int $invoiceId,
+        float $quantity,
+        int $productId,
+        array $taxIds,
+        string $description = "",
+        float $unitPrice = 0,
+        ?array $attribute = null
+    ): int {
         global $LANG;
 
         $attr = [];
@@ -669,16 +682,17 @@ class Invoice
         if ($description == $LANG['descriptionUc']) {
             $description = "";
         }
-        $list = ['invoice_id' => $invoiceId,
-                 'domain_id' => DomainId::get(),
-                 'quantity' => $quantity,
-                 'product_id' => $productId,
-                 'unit_price' => $unitPrice,
-                 'tax_amount' => $taxAmount,
-                 'gross_total' => $grossTotal,
-                 'description' => $description,
-                 'total' => $total,
-                 'attribute' => json_encode($attr)
+        $list = [
+            'invoice_id' => $invoiceId,
+            'domain_id' => DomainId::get(),
+            'quantity' => $quantity,
+            'product_id' => $productId,
+            'unit_price' => $unitPrice,
+            'tax_amount' => $taxAmount,
+            'gross_total' => $grossTotal,
+            'description' => $description,
+            'total' => $total,
+            'attribute' => json_encode($attr)
         ];
         return self::insertItem($list, $taxIds);
     }
@@ -753,9 +767,15 @@ class Invoice
      * @param array|null $attribute Attributes for invoice.
      * @throws PdoDbException
      */
-    public static function updateInvoiceItem(int $id, float $quantity, int $productId, array $taxIds,
-                                             string $description, float $unitPrice, ?array $attribute = null): void
-    {
+    public static function updateInvoiceItem(
+        int $id,
+        float $quantity,
+        int $productId,
+        array $taxIds,
+        string $description,
+        float $unitPrice,
+        ?array $attribute = null
+    ): void {
         global $LANG, $pdoDb;
 
         $attr = [];
@@ -929,9 +949,13 @@ class Invoice
      * @param bool $update
      * @throws PdoDbException
      */
-    public static function chgInvoiceItemTax(int $invoiceItemId, ?array $lineItemTaxIds, float $unitPrice,
-                                             float $quantity, bool $update): void
-    {
+    public static function chgInvoiceItemTax(
+        int $invoiceItemId,
+        ?array $lineItemTaxIds,
+        float $unitPrice,
+        float $quantity,
+        bool $update
+    ): void {
         global $config;
 
         try {
@@ -1034,30 +1058,30 @@ class Invoice
 
                 if (strpos(strtolower($row['index_id']), strtolower($que)) !== false) {
                     // @formatter:off
-                    $total = Util::htmlSafe(number_format($row['total'],2));
-                    $paid  = Util::htmlSafe(number_format($row['paid'],2));
-                    $owing = Util::htmlSafe(number_format($row['owing'],2));
+                    $total = Util::htmlSafe(number_format($row['total'], 2));
+                    $paid  = Util::htmlSafe(number_format($row['paid'], 2));
+                    $owing = Util::htmlSafe(number_format($row['owing'], 2));
                     echo "{$row['id']}|" .
-                            "<table>" .
-                                "<tr>" .
-                                    "<td class='details_screen'>{$row['preference']}:</td>" .
-                                    "<td>{$row['index_id']}</td>" .
-                                    "<td class='details_screen'>Total: </td>" .
-                                    "<td>$total</td>" .
-                                "</tr>" .
-                                "<tr>" .
-                                    "<td class='details_screen'>Biller: </td>" .
-                                    "<td>{$row['biller']}</td>" .
-                                    "<td class='details_screen'>Paid: </td>" .
-                                    "<td>$paid</td>" .
-                                "</tr>" .
-                                "<tr>" .
-                                    "<td class='details_screen'>Customer: </td>" .
-                                    "<td>{$row['customer']}</td>" .
-                                    "<td class='details_screen'>Owing: </td>" .
-                                    "<td><u>$owing</u></td>" .
-                                "</tr>" .
-                            "</table>\n";
+                        "<table>" .
+                        "<tr>" .
+                        "<td class='details_screen'>{$row['preference']}:</td>" .
+                        "<td>{$row['index_id']}</td>" .
+                        "<td class='details_screen'>Total: </td>" .
+                        "<td>$total</td>" .
+                        "</tr>" .
+                        "<tr>" .
+                        "<td class='details_screen'>Biller: </td>" .
+                        "<td>{$row['biller']}</td>" .
+                        "<td class='details_screen'>Paid: </td>" .
+                        "<td>$paid</td>" .
+                        "</tr>" .
+                        "<tr>" .
+                        "<td class='details_screen'>Customer: </td>" .
+                        "<td>{$row['customer']}</td>" .
+                        "<td class='details_screen'>Owing: </td>" .
+                        "<td><u>$owing</u></td>" .
+                        "</tr>" .
+                        "</table>\n";
                     // @formatter:on
                 }
             }
@@ -1406,8 +1430,8 @@ class Invoice
                 'product_id' => $invoiceItem['product_id'],
                 'unit_price' => $invoiceItem['unit_price'],
                 'tax_amount' => $invoiceItem['tax_amount'],
-                'gross_total'=> $invoiceItem['gross_total'],
-                'description'=> $invoiceItem['description'],
+                'gross_total' => $invoiceItem['gross_total'],
+                'description' => $invoiceItem['description'],
                 'total'      => $invoiceItem['total'],
                 'attribute'  => $invoiceItem['attribute']
             ];
@@ -1419,5 +1443,4 @@ class Invoice
 
         return $newId;
     }
-
 }
