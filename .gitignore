@@ -12,7 +12,7 @@ public/**
 .settings/**
 
 ### Exclude non-library extensions ###
-extensions
+extensions/*
 !extensions/eway
 !extensions/stripe
 
