@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '6852ee1d390dcfee3295971ba0d31b62b2d5ef82',
+        'reference' => '4d67513a2973d212cc8c9d40cf85dc1de639af7c',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '6852ee1d390dcfee3295971ba0d31b62b2d5ef82',
+            'reference' => '4d67513a2973d212cc8c9d40cf85dc1de639af7c',
             'dev_requirement' => false,
         ),
         'cordoval/hamcrest-php' => array(
@@ -437,6 +437,15 @@
             'install_path' => __DIR__ . '/../smarty/smarty',
             'aliases' => array(),
             'reference' => '97aeb14c6fc2fb733938809926e2f9d6c581a70d',
+            'dev_requirement' => false,
+        ),
+        'stripe/stripe-php' => array(
+            'pretty_version' => 'v10.1.0',
+            'version' => '10.1.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../stripe/stripe-php',
+            'aliases' => array(),
+            'reference' => '9b69abcc40bce97712df01ba40c93bcae8e1f272',
             'dev_requirement' => false,
         ),
         'swiftmailer/swiftmailer' => array(
