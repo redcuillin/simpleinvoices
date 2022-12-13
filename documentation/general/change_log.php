@@ -17,6 +17,27 @@
     <br/>
     <div id="left">
         <ul>
+            <li>2022-11-18 - <strong>2020.4.5</strong>
+                <ul>
+                    <li>Modified system defaults get functions to force int type value returned when appropriate.</li>
+                </ul>
+            </li>
+            <li>2022-11-10 - <strong>2020.4.4</strong>
+                <ul>
+                    <li>Add invoice display days SI Defaults option for invoice display screen.</li>
+                </ul>
+            </li>
+            <li>2022-11-08 - <strong>2020.4.3</strong>
+                <ul>
+                    <li>Add payment warehouse feature to SI.</li>
+                    <li>Fix issue with update from 2019.2 to 2020.x</li>
+                    <li>Update files for structure and full database update.</li>
+                    <li>Replace jquery alert dialogs with Alertify.js alerts.</li>
+                    <li>Enhance add payments to fill fields based on payment selection.</li>
+                    <li>Allow payments to be deleted based on delete days option in SI Defaults.</li>
+                    <li>Changed to use node jquery-ui library for ongoing maintenance.</li>
+                </ul>
+            </li>
             <li>2022-09-30 - <strong>2020.4.2</strong>
                 <ul>
                     <li>Make invoice_item_id a key field in the si_invoice_item_tax table.</li>
