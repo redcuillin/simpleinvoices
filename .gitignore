@@ -14,6 +14,7 @@ public/**
 ### Exclude non-library extensions ###
 extensions
 !extensions/eway
+!extensions/stripe
 
 library/HTMLPurifier/DefinitionCache/Serializer/HTML/*
 templates/invoices/ftcc
