@@ -1,4 +1,3 @@
-
 * {
     margin: 0;
     padding: 0;
@@ -12,21 +11,27 @@
 
 html {
     box-sizing: border-box;
-    font-size: 62.5%; /* 1rem = 10px, 10px/16px = 62.5% */
+    font-size: 62.5%;
+    /* 1rem = 10px, 10px/16px = 62.5% */
 }
 
 body {
     background: white;
     color: #444444;
     font-style: normal;
-    font-size: 1.1em; /* was 16pt */
+    font-size: 1.1em;
+    /* was 16pt */
     font-family: Arial, Veranda, Sans-Serif, serif;
     padding: 10px;
 }
 
-.header { clear: both; }
+.header {
+    clear: both;
+}
 
-hr { color: #444444; }
+hr {
+    color: #444444;
+}
 
 table {
     border-spacing: 0;
@@ -49,51 +54,74 @@ tr {
     text-align: left;
 }
 
-.col1 { background-color: #EFEFEF; }
+.col1 {
+    background-color: #EFEFEF;
+}
 
 .font1 {
     font-family: Arial, serif;
-    font-size: 2em; /* was 14pt */
+    font-size: 2em;
+    /* was 14pt */
 }
 
 .font2 {
     color: #990000;
-    font-size: 1.5em; /* was 12pt */
+    font-size: 1.5em;
+    /* was 12pt */
     font-weight: bold;
 }
 
 .font3 {
     font-family: Arial, serif;
-    font-size: 1em; /* was 8pt */
+    font-size: 1em;
+    /* was 8pt */
 }
 
 .italic {
     font-style: italic;
 }
 
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+.row2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.row2 table.summary {
+    justify-self: start;
+}
+
+.row2 table.biller-customer {
+    justify-self: end;
+}
+
 .tbl1 {
     border: #A0A0A0 1px solid;
-    border-collapse:collapse;
+    border-collapse: collapse;
 }
 
 .tbl1-left {
     border-left: #A0A0A0 1px solid;
-    border-collapse:collapse;
+    border-collapse: collapse;
 }
 
 .tbl1-right {
     border-right: #A0A0A0 1px solid;
-    border-collapse:collapse;
+    border-collapse: collapse;
 }
 
 .tbl1-bottom {
     border-bottom: #A0A0A0 1px solid;
-    border-collapse:collapse;
+    border-collapse: collapse;
 }
 
 .tbl1-top {
     border-top: #A0A0A0 1px solid;
-    border-collapse:collapse;
+    border-collapse: collapse;
 }
 
 .logo {
@@ -102,22 +130,39 @@ tr {
     text-align: left;
 }
 
-.left { clear: left; }
+.left {
+    clear: left;
+}
 
-table.right, table .right {float: right;}
+.underline {
+    text-decoration: underline;
+}
 
-.underline { text-decoration: underline; }
+.double_underline {
+    border-bottom: 3px double #555;
+}
 
-.double_underline { border-bottom: 3px double #555; }
+.si_product_attribute {
+    padding-right: 20px;
+}
 
-.si_product_attribute { padding-right:20px; }
+.si_product_description {
+    font-size: .8em;
+    color: #535353;
+}
 
-.si_product_description {font-size: .8em; color: #535353;}
+.text_left {
+    text-align: left;
+}
 
-.text_left { text-align: left; }
+.text_center {
+    text-align: center;
+}
 
-.text_center { text-align: center; }
+.text_right {
+    text-align: right;
+}
 
-.text_right { text-align: right; }
-
-.width_100 { width: 100%; }
+.width_100 {
+    width: 100%;
+}
