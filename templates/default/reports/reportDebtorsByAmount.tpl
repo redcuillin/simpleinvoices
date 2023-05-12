@@ -2,13 +2,13 @@
 {include file=$path|cat:"library/exportButtons.tpl"
          params=[
              'fileName' => "reportDebtorsByAmount",
-             'includePaidInvoices' => $includePaidInvoices|urlencode,
-             'title' => $title|urlencode
+             'includePaidInvoices' => $includePaidInvoices|urlEncode,
+             'title' => $title|urlEncode
          ]
 }
 {if $menu}
     <form name="frmpost" method="POST" id="frmpost"
-          action="index.php?module=reports&amp;view=reportDebtorsByAmount">
+          action="index.php?module=reports&amp;view=reportDebtorsByAmount&amp;showAllReports={$showAllReports}">
         <div class="si_form si_form_search">
             <div class="grid__area">
                 {include file=$path|cat:"library/includePaidInvoices.tpl"}

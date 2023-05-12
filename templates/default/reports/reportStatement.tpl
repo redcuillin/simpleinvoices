@@ -1,18 +1,18 @@
 {include file=$path|cat:"library/reportTitle.tpl" title=$title}
 {include file=$path|cat:"library/exportButtons.tpl"
          params=[
-             'billerId' => $billerId|urlencode,
-             'customerId' => $customerId|urlencode,
-             'endDate' => $endDate|urlencode,
+             'billerId' => $billerId|urlEncode,
+             'customerId' => $customerId|urlEncode,
+             'endDate' => $endDate|urlEncode,
              'fileName' => "reportStatement",
-             'filterByDateRange' => $filterByDateRange|urlencode,
-             'includePaidInvoices' => $includePaidInvoices|urlencode,
-             'startDate' => $startDate|urlencode,
-             'title' => $title|urlencode
+             'filterByDateRange' => $filterByDateRange|urlEncode,
+             'includePaidInvoices' => $includePaidInvoices|urlEncode,
+             'startDate' => $startDate|urlEncode,
+             'title' => $title|urlEncode
         ]
 }
 {if $menu}
-    <form name="frmpost" method="POST" id="frmpost" action="index.php?module=reports&amp;view=reportStatement">
+    <form name="frmpost" method="POST" id="frmpost" action="index.php?module=reports&amp;view=reportStatement&amp;showAllReports={$showAllReports}">
         <div class="si_form si_form_search">
             <div class="grid__area">
                 {include file=$path|cat:"library/dateRangePrompt.tpl"}

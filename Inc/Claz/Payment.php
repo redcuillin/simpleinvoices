@@ -4,6 +4,7 @@ namespace Inc\Claz;
 
 use DateTime;
 use Exception;
+use NumberFormatter;
 
 /**
  * Class Payment
@@ -284,6 +285,11 @@ class Payment
             foreach ($rows as $row) {
                 $row['notes_short'] = Util::TruncateStr($row['ac_notes'], '13', '...');
                 $row['date'] = Util::date($row['ac_date']);
+
+                $formatter = new NumberFormatter($row['locale'], NumberFormatter::CURRENCY);
+                $precision = $formatter->getAttribute(NumberFormatter::FRACTION_DIGITS);
+                $row['precision'] = $precision;
+
                 $payments[] = $row;
             }
         } catch (PdoDbException $pde) {
@@ -306,7 +312,7 @@ class Payment
      *          online_payment_id value to select payments for.
      * @return array
      */
-    public static function selectByValue(string $filter, $value): array
+    public static function selectByValue(string $filter, array|int $value): array
     {
         global $pdoDb;
 
@@ -404,7 +410,7 @@ class Payment
      * @param array $list <i>Faux Post</i> list of record's values.
      * @return bool true if record inserted. false if failed.
      */
-    public static function insert(array $list, int $customerId): bool
+    public static function insert(array $list, int|string $customerId): bool
     {
         global $pdoDb;
 

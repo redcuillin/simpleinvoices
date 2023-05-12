@@ -75,9 +75,6 @@ class Customer
     {
         global $config, $LANG, $pdoDb;
 
-        session_name("SiAuth");
-        session_start();
-
         $customerSession = $_SESSION['role_name'] == 'customer';
 
         $viewCust = $LANG['view'] . " " . $LANG['customerUc'];
@@ -165,7 +162,7 @@ class Customer
      * @noinspection PhpTernaryExpressionCanBeReplacedWithConditionInspection*/
     private static function getCustomers(array $params): array
     {
-        global $LANG, $pdoDb;
+        global $config, $LANG, $pdoDb;
 
         // formatter:off
         $id             = $params['id']            ?? null;
@@ -186,9 +183,6 @@ class Customer
                     $pdoDb->addSimpleWhere("enabled", ENABLED, "AND");
                 }
             }
-
-            session_name("SiAuth");
-            session_start();
 
             // If user role is customer or biller, then restrict invoices to those they have access to.
             if ($_SESSION['role_name'] == 'customer') {
@@ -213,6 +207,19 @@ class Customer
 
             $rows = $pdoDb->request("SELECT", "customers");
             foreach ($rows as $row) {
+                if (empty($row['default_invoice'])) {
+                    $row['locale'] = $config['localLocale'];
+                    $row['currency_code'] = $config['localCurrencyCode'];
+                } else {
+                    $defaultInvoice = Invoice::getOne($row['default_invoice'], true);
+                    if (empty($defaultInvoice)) {
+                        $row['locale'] = $config['localLocale'];
+                        $row['currency_code'] = $config['localCurrencyCode'];
+                    } else {
+                        $row['locale'] = $defaultInvoice['locale'];
+                        $row['currency_code'] = $defaultInvoice['currency_code'];
+                    }
+                }
                 if ($notInWarehouse) {
                     $pw = PaymentWarehouse::getOne($row['id'], 1);
                     if (!empty($pw)) {
@@ -443,7 +450,7 @@ class Customer
      * @param int $parentId
      * @noinspection PhpUnused
      */
-    public static function getSubCustomerAjax(int $parentId): void
+    public static function getSubCustomerAjax(int $parentId): never
     {
         $rows = self::getSubCustomers($parentId);
         $output = "<option value=''></option>";
@@ -545,7 +552,7 @@ class Customer
             $maskLen = $len - $numToShow;
             $maskedValue = str_repeat($maskChr, $maskLen);
             $maskedValue .= substr($decryptedValue, $maskLen);
-        } catch (Exception $exp) {
+        } catch (Exception) {
             return $value;
         }
         return $maskedValue;

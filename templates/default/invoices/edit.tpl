@@ -48,10 +48,18 @@
             <div class="cols__3-span-8">
                 {if !isset($customers)}
                     <em>{$LANG.noCustomers}</em>
+                {elseif $isDefaultInvoice == true}
+                    {foreach $customers as $customer}
+                        {if $customer.id == $invoice.customer_id}
+                            <input type="text" name="customer_id" id="customerId" value="{$customer.name|htmlSafe}">
+                            <span class="si_message_warning">{$LANG.customerUc} {$LANG.cant} {$LANG.change} {$LANG.asLc} {$LANG.invoice} {$LANG.is} {$LANG.default} {$LANG.for} {$LANG.customer}.</span>
+                            {break}
+                        {/if}
+                    {/foreach}
                 {else}
                     <select name="customer_id" id="customerId">
                         {foreach $customers as $customer}
-                            <option {if $customer.id == $invoice.customer_id} selected {/if}
+                            <option {if $customer.id == $invoice.customer_id}selected{/if}
                                     value="{if isset($customer.id)}{$customer.id|htmlSafe}{/if}">{$customer.name|htmlSafe}</option>
                         {/foreach}
                     </select>
@@ -74,13 +82,7 @@
         </div>
         <input type="hidden" name="id" value="{$invoice.id|htmlSafe}"/>
         <input type="hidden" name="op" value="edit"/>
-        {if $invoice.type_id == TOTAL_INVOICE }
-            <input type="hidden" id="quantity0" size="10" value="1.00" name="quantity0"/>
-            <input type="hidden" id="line_item0" value="{$invoiceItems[0].id|htmlSafe}" name="line_item0"/>
-            <input type="hidden" name="id0" value="{$invoiceItems[0].id|htmlSafe}"/>
-            <input type="hidden" name="products0" value="{$invoiceItems[0].product_id|htmlSafe}"/>
-        {/if}
-        <input type="hidden" name="type" value="{if isset($invoice.type_id)}{$invoice.type_id|htmlSafe}{/if}"/>
+        <input type="hidden" id="typeId" name="type" value="{if isset($invoice.type_id)}{$invoice.type_id|htmlSafe}{/if}"/>
         <input type="hidden" id="max_items" name="max_items" value="{if isset($lines)}{$lines|htmlSafe}{/if}"/>
     </div>
 </form>

@@ -123,7 +123,10 @@ class Cron
                 "cron.recurrence",
                 "cron.recurrence_type",
                 "cust.name",
-                new DbField("iv.index_id", 'index_id')
+                new DbField("iv.index_id", 'index_id'),
+                new DbField("pf.locale", "locale"),
+                new DbField("pf.pref_currency_sign", "currency_sign"),
+                new DbField("pf.currency_code", "currency_code")
             ];
 
             $pdoDb->setSelectList($exprList);
@@ -195,16 +198,27 @@ class Cron
         global $pdoDb;
 
         try {
+            $row = self::getOne($id);
+            $invoiceId = $row['invoice_id'];
+
             $pdoDb->begin();
-            $pdoDb->addSimpleWhere('cron_id', $id);
-            $result = $pdoDb->request('DELETE', 'cron_log');
+            $pdoDb->addSimpleWhere('cron_invoice_item_id', $invoiceId);
+            $result = $pdoDb->request('DELETE', 'cron_invoice_item_tax');
             if ($result) {
-                $pdoDb->addSimpleWhere("id", $id, "AND");
-                $pdoDb->addSimpleWhere("domain_id", DomainId::get());
-                $result = $pdoDb->request("DELETE", "cron");
+                $pdoDb->addSimpleWhere('cron_id', $id);
+                $result = $pdoDb->request('DELETE', 'cron_invoice_items');
                 if ($result) {
-                    $pdoDb->commit();
-                    return true;
+                    $pdoDb->addSimpleWhere('cron_id', $id);
+                    $result = $pdoDb->request('DELETE', 'cron_log');
+                    if ($result) {
+                        $pdoDb->addSimpleWhere("id", $id, "AND");
+                        $pdoDb->addSimpleWhere("domain_id", DomainId::get());
+                        $result = $pdoDb->request("DELETE", "cron");
+                        if ($result) {
+                            $pdoDb->commit();
+                            return true;
+                        }
+                    }
                 }
             }
         } catch (PdoDbException $pde) {
@@ -349,9 +363,6 @@ class Cron
                         $biller = Biller::getOne($invoice['biller_id']);
                         $customer = Customer::getOne($invoice['customer_id']);
                         $preference = Preferences::getOne($invoice['preference_id']);
-
-//                        $billerEmail = [$biller['email'] => $biller['name']];
-//                        $customerEmail = [$customer['email'] => $customer['name']];
 
                         // email invoice
                         if ($value['email_biller'] == ENABLED || $value['email_customer'] == ENABLED) {
@@ -668,7 +679,7 @@ class Cron
      * @param int $cronId to remove cron information for.
      * @throws PdoDbException thrown if issue arises.
      */
-    public static function deleteCronInvoiceItems(int $cronId)
+    public static function deleteCronInvoiceItems(int $cronId): void
     {
         global $config, $pdoDb;
 
@@ -989,12 +1000,13 @@ class Cron
 
     /**
      * Deletes a specific cron_invoice_items record and its tax info from the database.
-     * @param int $id of cron_invoice_items record to delete.
+     * @param int|string $id of cron_invoice_items record to delete.
      * @return bool true if delete processed, false if not.
      */
-    public static function deleteCronInvoiceItem(int $id): bool
+    public static function deleteCronInvoiceItem(int|string $id): bool
     {
         global $pdoDb;
+
 
         try {
             $pdoDb->begin();

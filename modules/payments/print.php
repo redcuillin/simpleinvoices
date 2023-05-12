@@ -16,8 +16,14 @@ global $LANG, $smarty;
 //stop the direct browsing to this file - let index.php handle which files get displayed
 Util::directAccessAllowed();
 
-$menu = false;
-$payment = Payment::getOne($_GET['id']);
+$menu = false; // This variable is reference here and in index.php.
+try {
+    $payment = Payment::getOne($_GET['id']);
+} catch (PdoDbException $pde) {
+    $msg = "payments print.php - error: " . $pde->getMessage();
+    error_log($msg);
+    exit($msg);
+}
 
 // Get Invoice preference - so can link from this screen back to the invoice
 $biller = Biller::getOne($payment['biller_id']);

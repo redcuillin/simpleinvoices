@@ -39,13 +39,14 @@ class SiError
     public static function out(string $type, string $info1 = "", string $info2 = ""): string
     {
         $dbname = '';
-        if ($type == "dbConnection" && strstr($info1, "Unknown database") !== false) {
+        if ($type == "dbConnection" && str_contains($info1, "Unknown database")) {
             $type = "install";
             $parts = explode("'", $info1);
             $dbname = $parts[1];
         }
 
         // @formatter:off
+        /** @noinspection PhpSwitchCanBeReplacedWithMatchExpressionInspection */
         switch ($type) {
             case "generic":
                 $mess = "<br />===========================================" .
@@ -192,6 +193,17 @@ class SiError
                     "<br />" .
                     "<br />To fix this please edit the config/custom.config.ini file and set the " .
                     "databaseAdapter to 'pdo_mysql' and databaseUtf8 to 'true'." .
+                    "<br />" .
+                    "<br />===========================================" .
+                    "<br />";
+                break;
+
+            case "phpVersion":
+                $mess = "<br />===========================================" .
+                    "<br />SimpleInvoices - PHP - Version Issue" .
+                    "<br />===========================================" .
+                    "<br />" .
+                    "<br />$info1" .
                     "<br />" .
                     "<br />===========================================" .
                     "<br />";

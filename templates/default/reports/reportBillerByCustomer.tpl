@@ -1,16 +1,16 @@
 {include file=$path|cat:"library/reportTitle.tpl" title=$title}
 {include file=$path|cat:"library/exportButtons.tpl"
          params=[
-             'billerId' => $billerId|urlencode,
-             'endDate' => $endDate|urlencode,
+             'billerId' => $billerId|urlEncode,
+             'endDate' => $endDate|urlEncode,
              'fileName' => "reportBillerByCustomer",
-             'startDate' => $startDate|urlencode,
-             'title' => $title|urlencode
+             'startDate' => $startDate|urlEncode,
+             'title' => $title|urlEncode
          ]
 }
 {if $menu}
     <form name="frmpost" method="POST" id="frmpost"
-          action="index.php?module=reports&amp;view=reportBillerByCustomer">
+          action="index.php?module=reports&amp;view=reportBillerByCustomer&amp;showAllReports={$showAllReports}">
         <div class="si_form si_form_search">
             <div class="grid__area">
                 {include file=$path|cat:"library/dateRangePrompt.tpl"}

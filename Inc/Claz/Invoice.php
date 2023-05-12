@@ -6,6 +6,7 @@ use DateInterval;
 use DateTime;
 use DateTimeZone;
 use Exception;
+use NumberFormatter;
 
 /**
  * Class Invoice
@@ -41,9 +42,9 @@ class Invoice
      * @return array $invoice
      * @throws PdoDbException
      */
-    public static function getOne(int $id): array
+    public static function getOne(int $id, bool $useIndexId = false): array
     {
-        return self::getInvoices($id);
+        return self::getInvoices($id, '', '', false, 0, $useIndexId);
     }
 
     /**
@@ -159,8 +160,6 @@ class Invoice
     {
         global $config, $LANG;
 
-        session_name(SESSION_NAME);
-        session_start();
         $readOnly = $_SESSION['role_name'] == 'customer';
         $rows = self::getInvoices(null, '', '', false, $invoiceDisplayDays);
         $tableRows = [];
@@ -249,12 +248,10 @@ class Invoice
         string $sort = "",
         string $dir = "",
         bool $includeWarehouse = false,
-        int $invoiceDisplayDays = 0
+        int $invoiceDisplayDays = 0,
+        bool $useIndexId = false
     ): array {
         global $pdoDb;
-
-        session_name(SESSION_NAME);
-        session_start();
 
         try {
             if ($invoiceDisplayDays > 0) {
@@ -264,15 +261,19 @@ class Invoice
                 $pdoDb->addToWhere(new WhereItem(false, 'iv.date', ">=", $displayLimitDt, false, 'AND'));
             }
 
-            if (isset($id)) {
-                $pdoDb->addSimpleWhere('iv.id', $id, 'AND');
-            }
-
             // If user role is customer or biller, then restrict invoices to those they have access to.
             if ($_SESSION['role_name'] == 'customer') {
                 $pdoDb->addSimpleWhere("c.id", $_SESSION['user_id'], "AND");
             } elseif ($_SESSION['role_name'] == 'biller') {
                 $pdoDb->addSimpleWhere("b.id", $_SESSION['user_id'], "AND");
+            }
+
+            if (isset($id)) {
+                if ($useIndexId) {
+                    $pdoDb->addSimpleWhere('iv.index_id', $id, 'AND');
+                } else {
+                    $pdoDb->addSimpleWhere('iv.id', $id, 'AND');
+                }
             }
 
             // If caller pass a null value, that mean there is no limit.
@@ -365,11 +366,18 @@ class Invoice
 
             $invoices = [];
             foreach ($rows as $row) {
+                $locale = $row['locale'];
+                $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+                $precision = $formatter->getAttribute(NumberFormatter::FRACTION_DIGITS);
+                $row['precision'] = $precision;
+
                 $owing = $row['total'] - $row['paid'];
                 // Check for case where owing on invoice differs from calculated owing
                 // FYI: Preference ID 1 is Invoice.
                 if (
-                    $owing > 0 && Util::numberTrim($row['owing']) != Util::numberTrim($owing) &&
+                    $owing > 0 &&
+                    Util::numberTrim($row['owing'], $precision, $locale) !=
+                    Util::numberTrim($owing, $precision, $locale) &&
                     $row['preference_id'] == 1
                 ) {
                     $forceUpdate = true;
@@ -718,8 +726,8 @@ class Invoice
         float $quantity,
         int $productId,
         array $taxIds,
-        string $description = "",
-        float $unitPrice = 0,
+        string $description,
+        float $unitPrice,
         ?array $attribute = null
     ): int {
         global $LANG;
@@ -1063,9 +1071,6 @@ class Invoice
         global $pdoDb;
 
         try {
-            session_name(SESSION_NAME);
-            session_start();
-
             // If user role is customer or biller, then restrict invoices to those they have access to.
             if ($_SESSION['role_name'] == 'customer') {
                 $pdoDb->addSimpleWhere("customer_id", $_SESSION['user_id'], "AND");
@@ -1166,7 +1171,7 @@ class Invoice
      * @return Havings havings SQL statement
      * @throws PdoDbException
      */
-    public static function buildHavings(string $option, $parms = ""): Havings
+    public static function buildHavings(string $option, array|string $parms = ""): Havings
     {
         try {
             $havings = new Havings();
@@ -1250,6 +1255,7 @@ class Invoice
             error_log("Invoice::getInvoiceItems() - id[$id] error: " . $pde->getMessage());
             throw $pde;
         }
+
         return $invoiceItems;
     }
 
