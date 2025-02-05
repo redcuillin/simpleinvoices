@@ -9,72 +9,68 @@
 </head>
 
 <body>
-  <br />
-  <div id="container">
-    <div class="header"></div>
-    <div class="grid">
-      <div class="row1 branding">
-        <table class="center width_100">
-          <tr>
-            <td colspan="5"><img src="{$logo|urlSafe}" class="logo" alt="{$logo|urlSafe}"></td>
-            <th class="text_right font1">&nbsp;{$preference.pref_inv_heading|htmlSafe}</th>
-          </tr>
-          <tr>
-            <td colspan="6" class="tbl1-top">&nbsp;</td>
-          </tr>
-        </table>
-      </div>
-      <!-- Summary - start -->
-      <div class="row2">
-        <table>
-          <tr>
-            <th class="col1 tbl1-bottom" colspan="4">{$preference.pref_inv_wording|htmlSafe}&nbsp;{$LANG.summaryUc}</th>
-          </tr>
-          {print_if_not_empty label=[$preference.pref_inv_wording|htmlSafe, ' ', $LANG.numberShort] field=$invoice.index_id class1='text_left' class2='right' colspan="3"}
-          {print_if_not_empty label=[$preference.pref_inv_wording|htmlSafe, ' ', $LANG.dateUc] field=$invoice.date|utilDate class1='text_left' class2='right' colspan="3"}
-          <!-- Show the Invoice Custom Fields if valid -->
-          {if !empty($customFieldLabels.invoice_cf1)}
-            {print_if_not_empty label=$customFieldLabels.invoice_cf1 field=$invoice.custom_field1 class1='text_left' class2='right' colspan="3"}
-          {/if}
-          {if !empty($customFieldLabels.invoice_cf2)}
-            {print_if_not_empty label=$customFieldLabels.invoice_cf2 field=$invoice.custom_field2 class1='text_left' class2='right' colspan="3"}
-          {/if}
-          {if !empty($customFieldLabels.invoice_cf3)}
-            {print_if_not_empty label=$customFieldLabels.invoice_cf3 field=$invoice.custom_field3 class1='text_left' class2='right' colspan="3"}
-          {/if}
-          {if !empty($customFieldLabels.invoice_cf4)}
-            {print_if_not_empty label=$customFieldLabels.invoice_cf4 field=$invoice.custom_field4 class1='text_left' class2='right' colspan="3"}
-          {/if}
-          <tr>
-            <th class="text_left">{$LANG.totalUc}:&nbsp;</th>
-            <td class="right" colspan="3">{$preference.pref_currency_sign}{$invoice.total|utilNumber}</td>
-          </tr>
-          <tr>
-            <th class="text_left">{$LANG.paidUc}:&nbsp;</th>
-            <td class="right" colspan="3">{$preference.pref_currency_sign}{$invoice.paid|utilNumber}</td>
-          </tr>
-          <tr>
-            <th class="text_left">{$LANG.owingUc}:&nbsp;</th>
-            <td class="right" colspan="3">{$preference.pref_currency_sign}{$invoice.owing|utilNumber}</td>
-          </tr>
-          <tr>
-            <td colspan="4">&nbsp;</td>
-          </tr>
-        </table>
-        <!-- Summary - end -->
-        <table class="left">
-          <!-- Biller section - start -->
-          {print_if_not_empty label=$LANG.billerUc field=$biller.name class1='tbl1-bottom col1 text_left' class2='tbl1-bottom col1' colspan="3"}
-          {print_if_not_empty label=$LANG.addressUc field=$biller.street_address class1='text_left' class2='' colspan="3"}
-          {* If odd case that addres is empty but address 2 is not, print lable for address 2 *}
-          {if !empty($biller.street_address2) }
-            {if empty($biller.street_address) }
-              {print_if_not_empty label=$LANG.addressUc field=$biller.street_address2 class1='text_left' class2='' colspan="3"}
-            {else}
-              {print_if_not_empty label='' field=$biller.street_address2 class1='text_left' class2='' colspan="3"}
-            {/if}
-          {/if}
-          {merge_address field1=$biller.city field2=$biller.state field3=$biller.zip_code
+<br />
+<div id="container">
+  <div class="header"></div>
+  <table class="center width_100">
+    <tr>
+      <td colspan="5"><img src="{$logo|urlSafe}" class="logo" alt="{$logo|urlSafe}"></td>
+      <th class="text_right font1">&nbsp;{$preference.pref_inv_heading|htmlSafe}</th>
+    </tr>
+    <tr>
+      <td colspan="6" class="tbl1-top">&nbsp;</td>
+    </tr>
+  </table>
+  <!-- Summary - start -->
+  <table class="right">
+    <tr>
+      <th class="col1 tbl1-bottom" colspan="4">{$preference.pref_inv_wording|htmlSafe}&nbsp;{$LANG.summaryUc}</th>
+    </tr>
+    {print_if_not_empty label=[$preference.pref_inv_wording|htmlSafe, ' ', $LANG.numberShort] field=$invoice.index_id class1='text_left' class2='right' colspan="3"}
+    {print_if_not_empty label=[$preference.pref_inv_wording|htmlSafe, ' ', $LANG.dateUc] field={$invoice.date_original|utilIntlDate:$invoice.locale:"long"} class1='text_left' class2='right' colspan="3"}
+        <!-- Show the Invoice Custom Fields if valid -->
+    {if !empty($customFieldLabels.invoice_cf1)}
+      {print_if_not_empty label=$customFieldLabels.invoice_cf1 field=$invoice.custom_field1 class1='text_left' class2='right' colspan="3"}
+    {/if}
+    {if !empty($customFieldLabels.invoice_cf2)}
+      {print_if_not_empty label=$customFieldLabels.invoice_cf2 field=$invoice.custom_field2 class1='text_left' class2='right' colspan="3"}
+    {/if}
+    {if !empty($customFieldLabels.invoice_cf3)}
+      {print_if_not_empty label=$customFieldLabels.invoice_cf3 field=$invoice.custom_field3 class1='text_left' class2='right' colspan="3"}
+    {/if}
+    {if !empty($customFieldLabels.invoice_cf4)}
+      {print_if_not_empty label=$customFieldLabels.invoice_cf4 field=$invoice.custom_field4 class1='text_left' class2='right' colspan="3"}
+    {/if}
+    <tr>
+      <th class="text_left">{$LANG.totalUc}:&nbsp;</th>
+      <td class="right" colspan="3">{$preference.pref_currency_sign}{$invoice.total|utilNumber}</td>
+    </tr>
+    <tr>
+      <th class="text_left">{$LANG.paidUc}:&nbsp;</th>
+      <td class="right" colspan="3">{$preference.pref_currency_sign}{$invoice.paid|utilNumber}</td>
+    </tr>
+    <tr>
+      <th class="text_left">{$LANG.owingUc}:&nbsp;</th>
+      <td class="right" colspan="3">{$preference.pref_currency_sign}{$invoice.owing|utilNumber}</td>
+    </tr>
+    <tr>
+      <td colspan="4">&nbsp;</td>
+    </tr>
+  </table>
+  <!-- Summary - end -->
+  <table class="left">
+    <!-- Biller section - start -->
+    {print_if_not_empty label=$LANG.billerUc field=$biller.name class1='tbl1-bottom col1 text_left' class2='tbl1-bottom col1' colspan="3"}
+    {print_if_not_empty label=$LANG.addressUc field=$biller.street_address class1='text_left' class2='' colspan="3"}
+    {* If odd case that addres is empty but address 2 is not, print lable for address 2 *}
+    {if !empty($biller.street_address2) }
+      {if empty($biller.street_address) }
+        {print_if_not_empty label=$LANG.addressUc field=$biller.street_address2 class1='text_left' class2='' colspan="3"}
+      {else}
+        {print_if_not_empty label='' field=$biller.street_address2 class1='text_left' class2='' colspan="3"}
+      {/if}
+    {/if}
+    {merge_address field1=$biller.city field2=$biller.state field3=$biller.zip_code
     street1=$biller.street_address street2=$biller.street_address2
     class1="" class2="" colspan="3"}
           {if isset($biller.country) }
