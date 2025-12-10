@@ -26,7 +26,10 @@
       </div>
       <!-- Summary - start -->
       <div class="row2">
-        <table class="summary">
+      <table class="compatibility">
+        <tr>
+            <td class="compat-col1">
+                <table class="summary">
           <tr>
             <th class="col1 tbl1-bottom" colspan="4">{$preference.pref_inv_wording|htmlSafe}&nbsp;{$LANG.summaryUc}</th>
           </tr>
@@ -61,6 +64,9 @@
             <td colspan="4">&nbsp;</td>
           </tr>
         </table>
+        <div class="spacer">&nbsp;</div>
+        </td>
+        <td class="compat-col2">
         <!-- Summary - end -->
         <table class="biller-customer">
           <!-- Biller section - start -->
@@ -136,6 +142,8 @@
           <tr>
             <td colspan="4">&nbsp;</td>
           </tr>
+        </table>
+        </td></tr>
         </table>
         <!-- Customer section - end -->
       </div>

@@ -29,6 +29,11 @@ body {
     clear: both;
 }
 
+#container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
 hr {
     color: #444444;
 }
@@ -52,6 +57,14 @@ tr {
     margin: 0;
     padding: 0;
     text-align: left;
+}
+
+.compat-col1 {
+    position: relative;
+}
+
+.compat-col2 {
+    text-align: right;
 }
 
 .col1 {
@@ -81,22 +94,21 @@ tr {
     font-style: italic;
 }
 
-.grid {
-    display: grid;
-    grid-template-columns: 1fr;
+table.compatibility {
+    width: 100%;
+}
+table.compatibility>tbody>tr>td {
+    width: 50%;
+    vertical-align: top;
 }
 
-.row2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+.biller-customer {
+    float:right;
 }
 
-.row2 table.summary {
-    justify-self: start;
-}
-
-.row2 table.biller-customer {
-    justify-self: end;
+.summary {
+    position: absolute;
+    top: 0;
 }
 
 .tbl1 {
