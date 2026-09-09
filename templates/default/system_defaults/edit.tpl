@@ -6,6 +6,8 @@
  *      Justin Kelly, Nicolas Ruflin
  *
  *  Last edited:
+ *      20251202 by Rich Rowley to use column size layout for responsiveness and appearence.
+ *      20251110 by Rich Rowley to use flex layout for responsive interface.
  *      20210701 by Rich Rowley to convert to grid layout.
  *
  *  License:
@@ -14,12 +16,16 @@
  *  Website:
  *      https://simpleinvoices.group
  *}
-<div class="grid__area">
-    <h3 class="align__text-center margin__bottom-2">{$LANG.edit} {$description|htmlSafe}</h3>
+<div class="form__container">
+    <h3 class="align__text-center">{$LANG.edit} {$description|htmlSafe}</h3>
     <form name="frmpost" method="POST" id="frmpost" action="index.php?module=system_defaults&amp;view=save">
-        <div class="grid__container grid__head-10">
-            <label for="valueId" class="cols__2-span-3 bold align__text-right margin__right-1">{$description|htmlSafe}:</label>
-            <div class="cols__5-span-5">{$value}</div>
+        <div class="row">
+            <div class="col__30">
+                <label for="valueId">{$description|htmlSafe}:</label>
+            </div>
+            <div class="col__70">
+                {$value}
+            </div>
         </div>
         <div class="align__text-center margin__top-2 margin__bottom-2">
             {if isset($default)}
@@ -34,4 +40,4 @@
         <input type="hidden" name="name" value="{if isset($default)}{$default|htmlSafe}{/if}">
         <input type="hidden" name="op" value="update_system_defaults"/>
     </form>
-</div>
+</>

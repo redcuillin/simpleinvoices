@@ -116,7 +116,7 @@ class Export
 
             case "file":
                 if ($this->module != "reports" && !empty($this->invoiceId)) {
-                    $invoice = Invoice::getOne($this->invoiceId);
+                    $invoice = Invoice::getOne($this->invoiceId, false, true);
                     $preference = Preferences::getOne($invoice['preference_id']);
                 }
 
@@ -176,7 +176,7 @@ class Export
             case "invoice":
                 try {
                     if (empty($this->invoices)) {
-                        $invoice = Invoice::getOne($this->invoiceId);
+                        $invoice = Invoice::getOne($this->invoiceId, false, true);
                     } else {
                         $invoice = $this->invoices;
                         $this->invoiceId = $invoice['id'];
@@ -253,12 +253,7 @@ class Export
                     // Plugins specifically associated with your invoice template.
                     $templatePluginsDir = "templates/invoices/$template/plugins/";
                     if (is_dir($templatePluginsDir)) {
-                        $pluginsDirs = $smarty->getPluginsDir();
-                        if (!is_array($pluginsDirs)) {
-                            $pluginsDirs = [$pluginsDirs];
-                        }
-                        $pluginsDirs[] = $templatePluginsDir;
-                        $smarty->setPluginsDir($pluginsDirs);
+                        $smarty->addPluginsDir($templatePluginsDir);
                     }
 
                     $data = $smarty->fetch("templates/invoices/$template/template.tpl");

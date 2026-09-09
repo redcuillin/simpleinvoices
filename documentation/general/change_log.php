@@ -19,9 +19,127 @@
     <br/>
     <div id="left">
         <ul>
-            <li>2023-09-09 - <strong>2023.0.7</strong>
+            <li>2026-04-17 - <strong>2026.00.13</strong>
                 <ul>
-                    <li>Fix gitignore from excluding css files needed by node modules.</li>
+                    <li>Updated <strong>Readme.md</strong> file links to current GitHub version of SI.</li>
+                    <li>Added php range and ucfirst functions to registered smarty modifier functions
+                        available for use in templates. Fix for Monthly Sales and Payments per Year report.</li>
+                </ul>
+            </li>
+        </ul>
+        <ul>
+            <li>2026-03-17 - <strong>2026.00.12</strong>
+                <ul>
+                    <li>Fix invoice preference edit logic to handle making a new numbering group
+                        for different types of invoices. For example, having a numbering group
+                        for Estimates that differs from Invoices.</li>
+                </ul>
+            </li>
+        </ul>
+        <ul>
+            <li>2026-02-28 - <strong>2026.00.11</strong>
+                <ul>
+                    <li>Fixed sql patch manager to handle case where not all old patch history exists
+                        in the si_sql_patchmanager table.</li>
+                </ul>
+            </li>
+        </ul>
+        <ul>
+            <li>2026-02-20 - <strong>2026.00.10</strong>
+                <ul>
+                    <li>Added rounding of tax amount to two decimal places.</li>
+                </ul>
+            </li>
+        </ul>
+        <ul>
+            <li>2026-02-18 - <strong>2026.00.09</strong>
+                <ul>
+                    <li>Modify email screen to use standard responsive layout.</li>
+                </ul>
+            </li>
+        </ul>
+        <ul>
+            <li>2026-01-25 - <strong>2026.00.08</strong>
+                <ul>
+                    <li>Fix check/check number validation logic for payment screen when screen
+                        using minimized menu.</li>
+                </ul>
+            </li>
+        </ul>
+        <ul>
+            <li>2026-01-23 - <strong>2026.00.07</strong>
+                <ul>
+                    <li>Set min width on grid fields to help when form width is small.</li>
+                </ul>
+            </li>
+        </ul>
+        <ul>
+            <li>2025-12-22 - <strong>2026.00.06</strong>
+                <ul>
+                    <li>Added option to Recurrence and Expense create/edit screens to return all invoices in the
+                        drop down lists.</li> 
+                </ul>
+            </li>
+        </ul>
+        <ul>
+            <li>2025-12-19 - <strong>2026.00.05</strong>
+                <ul>
+                    <li>Fixed issue with session timeout displaying login screen but when submitted, it just
+                        shows the login screen again; requiring a second login.</li>
+                    <li>Updated screens using new responsive display technique to restore much of the look and
+                        feel of screens prior to the flex formatting changes in version 2026.00.03.</li>
+                    <li>Modified create and edit screens for Expense and Recurrence to use the Invoice Display Days
+                        from system_defaults to limit the number of invoices loaded into the select array. This
+                        speeds rendering time for the screen on systems with large amounts of the historical
+                        invoices.</li>
+                </ul>
+            </li>
+        </ul>
+        <ul>
+            <li>2025-11-20 - <strong>2026.00.04</strong>
+                <ul>
+                    <li>Updated Invoice class to declare internal methods protected rather than private to that
+                        extension developers and more easily override use of a single method can still reference
+                        them when extending the parent class.</li>
+                </ul>
+            </li>
+        </ul>
+        <ul>
+            <li>2025-11-18 - <strong>2026.00.03</strong>
+                <ul>
+                    <li>Update npm packages.</li>
+                    <li>Updated composer libraries. This included update to v5.6.0 of smarty necessitating changes
+                        to the init.php and Export.php files for plugin directory declaration support.</li>
+                    <li>Renamed the program that converts the old config.php to config.ini. Program is now named:
+                        siConvertConfigPhpToConfigIni.php</li>
+                    <li>Modified screens to use flex formatting to support small screen devices.</li>
+                </ul>
+            </li>
+            <li>2025-10-20 - <strong>2026.00.02</strong>
+                <ul>
+                    <li>Correct misnumbered data table setting in the invoices management template.</li>
+                </ul>
+            </li>
+            <li>2025-10-20 - <strong>2026.00.01</strong>
+                <ul>
+                    <li>Modified to support mobile menu scheme on small screen device.</li>
+                    <li>Invoice manage screen table modified for better mobile screen display and invoice display
+                        screen modified to allow print, email, etc. buttons for small screen.</li>
+                    <li>Updated readme.md file to reference only the master_2026 version since if supports updates
+                        from all previous versions.</li>
+                    <li>Modified to allow optional, leading minus signs on numeric fields.</li>
+                </ul>
+            </li>
+            <li>2025-08-05 - <strong>2026.00.00</strong>
+                <ul>
+                    <li>Added logic to support printing unapplied prepayment (warehoused) amount on invoices.
+                        Two new language items added to use on invoice, <strong>reserveUc</strong> and
+                        <strong>unappliedUc</strong>.</li>
+                    <li>Added in historic database update entries (1 through 319) to the patch management table.
+                        These are the database changes that made it necessary to run master_2019.2 to update older
+                        versions of SI before loading the more current versions. Now with master_2026, you can
+                        update from all versions of SI to the most current.</li>
+                    <li>Cleaned up miscellaneous warnings in code found by qodana utility.</li>
                 </ul>
             </li>
             <li>2023-07-19 - <strong>2023.0.6</strong>

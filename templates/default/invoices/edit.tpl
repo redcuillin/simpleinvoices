@@ -3,6 +3,7 @@
  *      Invoice edit template
  *
  *  Last Modified:
+ *      20251110 by Rich Rowley to use flex layout for responsive interface.
  *      20210615 by Rich Rowley to use grid layout rather than tables.
  *      20181023 by Rich Rowley to support addition of default_invoice to standard app.
  *      20160212 by Rich Rowley to fix missing closing <td> tag and format for readability.
@@ -15,22 +16,33 @@
  *  Website:
  *      https://simpleinvoices.group
  *}
-<form name="frmpost" method="POST" id="frmpost" action="index.php?module=invoices&amp;view=save">
-    <div class='grid__area'>
-        <div class="grid__container grid__head-10">
-            <div class="cols__1-span-2 bold align__text-right margin__right-1">{$preference.pref_inv_wording|htmlSafe} {$LANG.numberShort}:</div>
-            <div class="cols__3-span-8">{if !$invoice.id}{$LANG.copiedFrom}&nbsp;{/if}{$invoice.index_id|htmlSafe}</div>
+<div class="form__container">
+    <form name="frmpost" method="POST" id="frmpost" action="index.php?module=invoices&amp;view=save">
+        <div class='row'>
+            <div class="col__20">
+                <label for="invoice_number">
+                    {if !$invoice.id}{$LANG.copiedFrom}&nbsp;{/if}{$preference.pref_inv_wording|htmlSafe}
+                    &nbsp;{$LANG.numberShort}:
+                </label>
+            </div>
+            <div class="col__80">
+                <input type="text" size="10" width="14" id="invoice_number" value="{$invoice.index_id|htmlSafe}" disabled/>
+            </div>
         </div>
-        <div class="grid__container grid__head-10">
-            <label for="dateId" class="cols__1-span-2 align__text-right margin__right-1">{$LANG.dateFormatted}:</label>
-            <div class="cols__3-span-8">
+        <div class="row">
+            <div class="col__20">
+                <label for="dateId">{$LANG.dateFormatted}:</label>
+            </div>
+            <div class="col__80">
                 <input type="text" size="10" class="date-picker" name="date" id="dateId" required readonly
                        value="{$invoice.date|htmlSafe}"/>
             </div>
         </div>
-        <div class="grid__container grid__head-10">
-            <label for="billerId" class="cols__1-span-2 align__text-right margin__right-1">{$LANG.billerUc}:</label>
-            <div class="cols__3-span-8">
+        <div class="row">
+            <div class="col__20">
+                <label for="billerId">{$LANG.billerUc}:</label>
+            </div>
+            <div class="col__80">
                 {if !isset($billers) }
                     <em>{$LANG.noBillers}</em>
                 {else}
@@ -43,9 +55,11 @@
                 {/if}
             </div>
         </div>
-        <div class="grid__container grid__head-10">
-            <label for="customerId" class="cols__1-span-2 align__text-right margin__right-1">{$LANG.customerUc}:</label>
-            <div class="cols__3-span-8">
+        <div class="row">
+            <div class="col__20">
+                <label for="customerId">{$LANG.customerUc}:</label>
+            </div>
+            <div class="col__80">
                 {if !isset($customers)}
                     <em>{$LANG.noCustomers}</em>
                 {elseif $isDefaultInvoice == true}
@@ -82,7 +96,8 @@
         </div>
         <input type="hidden" name="id" value="{$invoice.id|htmlSafe}"/>
         <input type="hidden" name="op" value="edit"/>
-        <input type="hidden" id="typeId" name="type" value="{if isset($invoice.type_id)}{$invoice.type_id|htmlSafe}{/if}"/>
+        <input type="hidden" id="typeId" name="type"
+               value="{if isset($invoice.type_id)}{$invoice.type_id|htmlSafe}{/if}"/>
         <input type="hidden" id="max_items" name="max_items" value="{if isset($lines)}{$lines|htmlSafe}{/if}"/>
-    </div>
-</form>
+    </form>
+</div>

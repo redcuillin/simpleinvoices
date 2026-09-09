@@ -1,15 +1,24 @@
 <div class="grid__container grid__head-10">
     <div class="cols__1-span-1 bold align__text-right">
         <label for="quantity0">{$LANG.quantityShort}
-            <img class="tooltip" title="{$LANG.requiredField} {$LANG.helpQuantity}" src="{$helpImagePath}required-small.png" alt=""/> </label>
+            <img class="tooltip" title="{$LANG.requiredField} {$LANG.helpQuantity}"
+                 src="{$helpImagePath}required-small.png" alt=""/> </label>
     </div>
-    <div class="cols__2-span-4 bold align__text-center">{$LANG.item}</div>
+    <div class="cols__2-span-4 bold align__text-center">
+        <label for="products0">{$LANG.item}</label>
+    </div>
     {$begCol = 6}
-    {section name=tax_header loop=$defaults.tax_per_line_item }
-        <div class="cols__{$begCol}-span-1 bold align__text-center">{$LANG.tax}{if $defaults.tax_per_line_item > 1} {$smarty.section.tax_header.iteration|htmlSafe}{/if}</div>
+    {section name=tax loop=$defaults.tax_per_line_item}
+        <div class="cols__{$begCol}-span-1 bold align__text-center">
+            <label for="tax_id[0][{$smarty.section.tax.index|htmlSafe}]" class="margin__left-1 align__text-right">
+                {$LANG.tax}{if $defaults.tax_per_line_item > 1}&nbsp;{$smarty.section.tax.iteration|htmlSafe}{/if}
+            </label>
+        </div>
         {$begCol = $begCol + 1}
     {/section}
-    <div class="cols__{$begCol}-span-1 bold align__text-right">{$LANG.unitPrice}</div>
+    <div class="cols__{$begCol}-span-1 bold align__text-right">
+        <label for="unit_price0">{$LANG.unitPrice}</label>
+    </div>
 </div>
 <input type="hidden" name="locale" id="localeId" value="{$invoice.locale}">
 <input type="hidden" name="currency_code" id="currencyCodeId" value="{$invoice.currency_code}">
@@ -30,11 +39,12 @@
                     <div id="qtyColumn" style="display:grid;grid-template-columns: {$cols};">
                         <a class="delete_link" id="delete_link{$line|htmlSafe}" href="#" title="{$LANG.deleteLineItem}"
                            {if $line == "0"}style="display:none;"{/if}
-                           data-row-num="{$line|htmlSafe}" data-delete-line-item={$config.confirmDeleteLineItem}> <img id="delete_image{$line|htmlSafe}" class="margin__top-0-5"
-                                                                                                                       src="images/delete_item.png" alt="{$LANG.deleteLineItem}"/> </a> <span>&nbsp;</span>
+                           data-row-num="{$line|htmlSafe}" data-delete-line-item={$config.confirmDeleteLineItem}> <img
+                                    id="delete_image{$line|htmlSafe}" class="margin__top-0-5"
+                                    src="images/delete_item.png" alt="{$LANG.deleteLineItem}"/> </a> <span>&nbsp;</span>
                         <!--suppress HtmlFormInputWithoutLabel -->
                         <input type="text" name="quantity{$line|htmlSafe}" id="quantity{$line|htmlSafe}"
-                               class="align__text-right validateQuantity" {if $line == 0}required{/if}
+                               class="align__text-right min-width-5 validateQuantity" {if $line == 0}required{/if}
                                data-row-num="{$line|htmlSafe}" data-decimal-places="2"
                                value='{$invoiceItem.quantity|utilNumberTrim:$invoice.precision:$invoice.locale}'/>
                     </div>
@@ -61,7 +71,7 @@
                         <!--suppress HtmlFormInputWithoutLabel -->
                         <select id="tax_id[{$line|htmlSafe}][{$smarty.section.tax.index|htmlSafe}]"
                                 name="tax_id[{$line|htmlSafe}][{$smarty.section.tax.index|htmlSafe}]"
-                                data-row-num="{$line|htmlSafe}" class="margin__left-1">
+                                data-row-num="{$line|htmlSafe}" class="margin__left-1 min-width-7">
                             <option value=""></option>
                             {$index = $smarty.section.tax.index}
                             {foreach $taxes as $tax}
@@ -75,7 +85,7 @@
                 <div class="cols__{$begCol}-span-1">
                     <!--suppress HtmlFormInputWithoutLabel -->
                     <input type="text" id="unit_price{$line|htmlSafe}" name="unit_price{$line|htmlSafe}"
-                           class="align__text-right margin__left-1 validateNumber" size="9"
+                           class="align__text-right margin__left-1 min-width-7 validateNumber" size="9"
                            {if $line == "0"}required{/if} data-row-num="{$line|htmlSafe}"
                            value="{$invoiceItem.unit_price|utilNumber:$invoice.precision:$invoice.locale}"/>
                 </div>
@@ -90,7 +100,8 @@
                 {if $invoiceItem.product.enabled == $smarty.const.ENABLED}
                     {if $prodAttrVal.type == 'list'}
                         <div class="cols__{$begCol}-span-2">
-                            <label for="list{$line}{$prodAttrVal.id}" class="">{$prodAttrVal.name}:</label> <select name="attribute{$line}[{$prodAttrVal.id}]" id="list{$line}{$prodAttrVal.id}">
+                            <label for="list{$line}{$prodAttrVal.id}" class="">{$prodAttrVal.name}:</label> <select
+                                    name="attribute{$line}[{$prodAttrVal.id}]" id="list{$line}{$prodAttrVal.id}">
                                 <option value=""></option>
                                 {foreach $prodAttrVal.attrVals as $key => $val}
                                     {if $prodAttrVal.enabled == $smarty.const.ENABLED}
@@ -116,8 +127,9 @@
                             {/if}
                         {/foreach}
                         <div class='cols__{$begCol}-span-2'>
-                            <label for="free{$line}{$prodAttrVal.id}" class="">{$prodAttrVal.name}:</label> <input type="text" name="attribute{$line}[{$prodAttrVal.id}]"
-                                                                                                                   id="free{$line}{$prodAttrVal.id}" value="{$attributeValue}"/>
+                            <label for="free{$line}{$prodAttrVal.id}" class="">{$prodAttrVal.name}:</label> <input
+                                    type="text" name="attribute{$line}[{$prodAttrVal.id}]"
+                                    id="free{$line}{$prodAttrVal.id}" value="{$attributeValue}"/>
                         </div>
                         {$begCol = $begCol + 2}
                     {elseif $prodAttrVal.type == 'decimal'}
@@ -129,8 +141,9 @@
                             {/if}
                         {/foreach}
                         <div class='cols__{$begCol}-span-2'>
-                            <label for="decimal{$line}{$prodAttrVal.id}" class="">{$prodAttrVal.name}:</label> <input type="text" name="attribute{$line}[{$prodAttrVal.id}]" size="5"
-                                                                                                                      id="decimal{$line}{$prodAttrVal.id}" value="{$attributeValue}"/>
+                            <label for="decimal{$line}{$prodAttrVal.id}" class="">{$prodAttrVal.name}:</label> <input
+                                    type="text" name="attribute{$line}[{$prodAttrVal.id}]" size="5"
+                                    id="decimal{$line}{$prodAttrVal.id}" value="{$attributeValue}"/>
                         </div>
                         {$begCol = $begCol + 2}
                     {/if}
@@ -142,10 +155,10 @@
             <div class="grid__container grid__head-10 details"
                  {if $defaults.invoice_description_open == $smarty.const.DISABLED}style="display:none;"{/if}>
                 {* colspan intentionally greater than min and max number so always uses full size *}
-                <div class="cols__2-span-10">
+                <div class="cols__1-span-10">
                     <!--suppress HtmlFormInputWithoutLabel -->
                     <textarea name="description{$line|htmlSafe}" id="description{$line|htmlSafe}" rows="3" cols="102"
-                              class="margin__left-0-5" data-row-num="{$line|htmlSafe}"
+                              data-row-num="{$line|htmlSafe}"
                               data-description="{$LANG.descriptionUc}">{$invoiceItem.description|outHtml}</textarea>
                 </div>
             </div>
@@ -157,18 +170,22 @@
 {$customFields.2}
 {$customFields.3}
 {$customFields.4}
-<div class="grid__container grid__head-10">
-    <div class="cols__1-span-2 bold">{$LANG.notes}:</div>
+<div class="row">
+    <div class="col__100">
+        <label for="note">{$LANG.notes}:</label>
+    </div>
 </div>
-<div class="grid__container grid__head-10">
-    <div class='cols__1-span-10'>
+<div class="row">
+    <div class="col__100">
         <input name="note" id="noteId" {if isset($invoice.note)}value="{$invoice.note|outHtml}"{/if} type="hidden">
         <trix-editor class="trix-content" input="noteId"></trix-editor>
     </div>
 </div>
-<div class="grid__container grid_head-10">
-    <label for="preferenceId" class="cols__1-span-2 align__text-right margin__right-1">{$LANG.invPref}:</label>
-    <div class="cols__3-span-3">
+<div class="row">
+    <div class="col__20">
+        <label for="preferenceId" class="margin__right-1">{$LANG.invPref}:</label>
+    </div>
+    <div class="col__80">
         {if !isset($preferences) }
             <em>{$LANG.noPreferences}</em>
         {else}
@@ -181,8 +198,12 @@
             </select>
         {/if}
     </div>
-    <label for="salesRepresentativeId" class="cols__6-span-2 align__text-right margin__right-1">{$LANG.salesRepresentative}:</label>
-    <div class="cols__8-span-3">
+</div>
+<div class="row">
+    <div class="col__20">
+        <label for="salesRepresentativeId" class="margin__right-1">{$LANG.salesRep}:</label>
+    </div>
+    <div class="col__80">
         <input type="text" name="sales_representative" id="salesRepresentativeId" size="30"
                value="{if isset($invoice.sales_representative)}{$invoice.sales_representative|htmlSafe}{/if}"/>
     </div>

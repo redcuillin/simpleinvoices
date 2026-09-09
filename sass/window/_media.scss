@@ -1,0 +1,17 @@
+@use "../abstracts/variables" as v;
+
+.mobileOnly {
+  display: none; /* Hide on desktop */
+}
+
+.desktopOnly {
+}
+
+@media (max-width: v.$mediaMaxWidth) {
+  .mobileOnly {
+  }
+
+  .desktopOnly {
+    display: none; /* Hide on mobile */
+  }
+}

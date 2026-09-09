@@ -42,9 +42,9 @@ class Invoice
      * @return array $invoice
      * @throws PdoDbException
      */
-    public static function getOne(int $id, bool $useIndexId = false): array
+    public static function getOne(int $id, bool $useIndexId = false, bool $includeWarehouse = false): array
     {
-        return self::getInvoices($id, '', '', false, 0, $useIndexId);
+        return self::getInvoices($id,'', '', $includeWarehouse, 0,$useIndexId);
     }
 
     /**
@@ -52,12 +52,14 @@ class Invoice
      * <strong>NOTE:</strong> DO NOT CLEAR $pdoDb as some selection and other values might have been added
      * @param string $sort field to order by, defaults to index_name.
      * @param string $dir sort direction "asc" or "desc" for ascending or descending, defaults to "asc".
+     * @param int $invoiceDisplayDays If specified, the days in the past invoice will be retrieved for.
+     *                                0 means no limit.
      * @return array invoice records.
      * @throws PdoDbException
      */
-    public static function getAll(string $sort = "index_name", string $dir = "desc"): array
+    public static function getAll(string $sort="index_name", string $dir="desc", int $invoiceDisplayDays = 0): array
     {
-        return self::getInvoices(null, $sort, $dir);
+        return self::getInvoices(null, $sort, $dir, false, $invoiceDisplayDays);
     }
 
     /**
@@ -79,14 +81,9 @@ class Invoice
      * @return array Invoices retrieved.
      * @throws PdoDbException
      */
-    public static function getAllWithHavings(
-        $having,
-        string $sort = "",
-        string $dir = "",
-        bool $manageTable = false,
-        bool $includeWarehouse = false,
-        int $invoiceDisplayDays = 0
-    ): array {
+    public static function getAllWithHavings(array|string $having, string $sort = "", string $dir = "", bool $manageTable = false,
+                                             bool $includeWarehouse = false, int $invoiceDisplayDays = 0): array
+    {
         global $pdoDb;
 
         if (!empty($having)) {
@@ -194,24 +191,24 @@ class Invoice
             }
 
             $action = "<a class='index_table' title='{$LANG['quickViewTooltip']} {$row['index_id']}' " .
-                "href='index.php?module=invoices&amp;view=quickView&amp;id={$row['id']}'>" .
-                "<img src='images/view.png' class='action' alt='view' />" .
-                "</a>" .
-                $invEdit .
-                "<a class='index_table' title='{$LANG['printPreviewTooltip']} {$row['index_id']}' target='_blank' " .
-                "href='index.php?module=export&amp;view=invoice&amp;id={$row['id']}&amp;format=print'>" .
-                "<img src='images/printer.png' class='action' alt='print' />" .
-                "</a>" .
-                "<a class='invoice_export_dialog' id='btnShowSimple' title='{$LANG['exportUc']} {$row['index_id']}' " .
-                "href='#' data-row-num='{$row['id']}' data-spreadsheet='{$config['exportSpreadsheet']}' " .
-                "data-wordprocessor='{$config['exportWordProcessor']}'>" .
-                "<img src='images/page_white_acrobat.png' class='action' alt='spreadsheet'/>" .
-                "</a>" .
-                $invPymt .
-                "<a title='{$LANG['email']} {$row['index_id']}' class='index_table' " .
-                "href='index.php?module=invoices&amp;view=email&amp;stage=1&amp;id={$row['id']}'>" .
-                "<img src='images/mail-message-new.png' class='action' alt='email' />" .
-                "</a>";
+                         "href='index.php?module=invoices&amp;view=quickView&amp;id={$row['id']}'>" .
+                          "<img src='images/view.png' class='action' alt='view' />" .
+                      "</a>" .
+                      $invEdit .
+                      "<a class='index_table desktopOnly' title='{$LANG['printPreviewTooltip']} {$row['index_id']}' target='_blank' " .
+                         "href='index.php?module=export&amp;view=invoice&amp;id={$row['id']}&amp;format=print'>" .
+                          "<img src='images/printer.png' class='action' alt='print' />" .
+                      "</a>" .
+                      "<a class='invoice_export_dialog desktopOnly' id='btnShowSimple' title='{$LANG['exportUc']} {$row['index_id']}' " .
+                         "href='#' data-row-num='{$row['id']}' data-spreadsheet='{$config['exportSpreadsheet']}' " .
+                         "data-wordprocessor='{$config['exportWordProcessor']}'>" .
+                          "<img src='images/page_white_acrobat.png' class='action' alt='spreadsheet'/>" .
+                      "</a>" .
+                      $invPymt .
+                      "<a title='{$LANG['email']} {$row['index_id']}' class='index_table desktopOnly' " .
+                         "href='index.php?module=invoices&amp;view=email&amp;stage=1&amp;id={$row['id']}'>" .
+                          "<img src='images/mail-message-new.png' class='action' alt='email' />" .
+                      "</a>";
 
             $pattern = '/^(.*)_(.*)$/';
             $tableRows[] = [
@@ -243,14 +240,10 @@ class Invoice
      * @return array Selected rows.
      * @throws PdoDbException
      */
-    private static function getInvoices(
-        ?int $id = null,
-        string $sort = "",
-        string $dir = "",
-        bool $includeWarehouse = false,
-        int $invoiceDisplayDays = 0,
-        bool $useIndexId = false
-    ): array {
+    protected static function getInvoices(?int $id = null, string $sort = "", string $dir = "",
+                                        bool $includeWarehouse = false, int $invoiceDisplayDays = 0,
+                                        bool $useIndexId = false): array
+    {
         global $pdoDb;
 
         try {
@@ -405,15 +398,17 @@ class Invoice
                 // Only present warehouse information if this is a specific record request.
                 // This avoids reporting multiple invoices for the same client with each
                 // showing warehouse information that is not adjusted for potential payments.
-                if ((isset($id) || $includeWarehouse) && $row['owing'] > 0) {
+                if ((isset($id) || $includeWarehouse)) {
                     $warehousedPayment = PaymentWarehouse::getOne($row['customer_id'], 1);
                     if (empty($warehousedPayment)) {
                         $whPymtAmt = '0';
                         $whPymtType = '';
                         $whPymtChkNo = '';
                         $whPymtTypeDesc = '';
+                        $whBalance = '0';
                     } else {
-                        $whPymtAmt = Util::number(min($row['owing'], $warehousedPayment['balance']));
+                        $whBalance = $warehousedPayment['balance'];
+                        $whPymtAmt= Util::number(min($row['owing'], $warehousedPayment['balance']));
                         $whPymtType = $warehousedPayment['payment_type'];
                         $whPymtChkNo = $warehousedPayment['check_number'];
 
@@ -421,10 +416,14 @@ class Invoice
                         $whPymtTypeDesc = $pmtType['pt_description'];
                     }
 
-                    $row['warehousedPayment'] = $whPymtAmt;
-                    $row['warehousedPaymentType'] = $whPymtType;
-                    $row['warehousedCheckNumber'] = $whPymtChkNo;
-                    $row['warehousedPaymentTypeDesc'] = $whPymtTypeDesc;
+                    $row['warehouseBalance'] = $whBalance;
+                    
+                    if ($row['owing'] > 0) {
+	                    $row['warehousedPayment'] = $whPymtAmt;
+	                    $row['warehousedPaymentType'] = $whPymtType;
+	                    $row['warehousedCheckNumber'] = $whPymtChkNo;
+	                    $row['warehousedPaymentTypeDesc'] = $whPymtTypeDesc;
+                    }
                 }
 
                 if ($forceUpdate) {
@@ -451,7 +450,7 @@ class Invoice
      * @param array $invoice Reference to the array with invoice values.
      * @param array $ageInfo Updated aging information.
      */
-    private static function updateAgingValues(array &$invoice, array $ageInfo): void
+    protected static function updateAgingValues(array &$invoice, array $ageInfo): void
     {
         if (isset($invoice['owing'])) {
             $invoice['owing'] = $ageInfo['owing'];
@@ -480,7 +479,7 @@ class Invoice
      * @param float $owing Amount owing on invoice.
      * @return string Aging string (ex: 1-14, 15-30, etc).
      */
-    private static function agingWording(int $age_days, float $owing): string
+    protected static function agingWording(int $age_days, float $owing): string
     {
         $ageStr = '';
         if ($owing > 0 && $age_days > 0) {
@@ -519,14 +518,9 @@ class Invoice
      *              "aging" (aging is the wording such as 1-14).
      * @throws PdoDbException
      */
-    private static function calculateAgeDays(
-        int $id,
-        string $invoiceDate,
-        float $owing,
-        string $lastActivityDate,
-        string $agingDate,
-        bool $setAging
-    ): array {
+    protected static function calculateAgeDays(int $id, string $invoiceDate, float $owing, string $lastActivityDate,
+                                             string $agingDate, bool $setAging): array
+    {
 
         // Don't recalculate $owing unless you have to because it involves DB reads.
         // Note that there is a time value in the dates, so they are typically equal only when
@@ -695,7 +689,7 @@ class Invoice
      * @return int Unique ID of the new invoice_item record.
      * @throws PdoDbException
      */
-    private static function insertItem(array $list, ?array $taxIds): int
+    protected static function insertItem(array $list, ?array $taxIds): int
     {
         global $pdoDb;
 
@@ -1291,7 +1285,7 @@ class Invoice
      * @return float
      * @throws PdoDbException
      */
-    private static function getInvoiceTotal(int $invoiceId): float
+    protected static function getInvoiceTotal(int $invoiceId): float
     {
         global $pdoDb;
 
@@ -1351,7 +1345,7 @@ class Invoice
      * @return array Rows retrieve.
      * @throws PdoDbException
      */
-    private static function taxesGroupedForInvoice(int $invoiceId): array
+    protected static function taxesGroupedForInvoice(int $invoiceId): array
     {
         global $pdoDb;
 
@@ -1397,7 +1391,7 @@ class Invoice
      * @return array Items found
      * @throws PdoDbException
      */
-    private static function taxesGroupedForInvoiceItem(int $invoiceItemId): array
+    protected static function taxesGroupedForInvoiceItem(int $invoiceItemId): array
     {
         global $pdoDb;
 
